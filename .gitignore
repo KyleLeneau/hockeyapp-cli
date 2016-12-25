@@ -1,0 +1,9 @@
+*pyc
+*.swp
+dist
+build
+*egg-info
+*.egg
+.idea
+test-config.yml
+docs/_build
