@@ -7,3 +7,5 @@ build
 .idea
 test-config.yml
 docs/_build
+
+venv
