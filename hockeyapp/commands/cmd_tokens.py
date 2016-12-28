@@ -4,7 +4,7 @@ import json
 from hockeyapp.cli import pass_context
 
 # URL for all the commands here
-url = 'https://rink.hockeyapp.net/api/2/auth_tokens'
+base_url = 'https://rink.hockeyapp.net/api/2/auth_tokens'
 
 # Tokens Rights map
 avail_rights = {'F': 0, 'U': 1, 'R': 2, 'UR': 3}
@@ -29,7 +29,7 @@ def cli(ctx):
 @pass_context
 def list(ctx, username, password):
     """Gets a users available tokens."""
-    req = requests.get(url, auth=(username, password))
+    req = requests.get(base_url, auth=(username, password))
     ctx.log(json.dumps(req.json(), indent=2))
 
 
@@ -47,5 +47,5 @@ def create(ctx, username, password, rights, name):
         'rights': avail_rights[rights.upper()],
         'name': name
     }
-    req = requests.post(url, auth=(username, password), data=data)
+    req = requests.post(base_url, auth=(username, password), data=data)
     ctx.log(json.dumps(req.json(), indent=2))
