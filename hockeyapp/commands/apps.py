@@ -3,9 +3,8 @@ import requests
 
 from hockeyapp.cli import pass_context
 from hockeyapp.util import *
+from api import *
 
-# URL for all the commands here
-base_url = 'https://rink.hockeyapp.net/api/2/apps'
 
 # Options for note types
 notes_type = { 'Textile': 0, 'T': 0, 'Markdown': 1, 'M': 1 }
@@ -23,11 +22,8 @@ def cli(ctx, token):
                         'member apps, and tester apps.')
 @pass_context
 def list(ctx):
-    url = 'https://rink.hockeyapp.net/api/2/apps'
-    headers = {
-        'X-HockeyAppToken': ctx.token
-    }
-    ctx.output_json(requests.get(url, headers=headers).json())
+    response = APIRequest(ctx.token, log=ctx.vlog).get('/apps')
+    ctx.output_json(response['apps'])
 
 
 @cli.command(short_help='Upload an .ipa, .apk, or .zip file to create a new app.')
