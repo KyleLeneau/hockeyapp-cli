@@ -1,13 +1,8 @@
 import click
-import requests
 
 from hockeyapp.cli import pass_context
 from hockeyapp.util import *
 from api import *
-
-
-# URL for all the commands here
-base_url = 'https://rink.hockeyapp.net/api/2/apps'
 
 
 @click.group(short_help='API for versions that lets you list versions of an app, upload, create, or update a '
