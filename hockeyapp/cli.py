@@ -30,9 +30,9 @@ class Config(object):
         if self.verbose:
             self.log(msg, *args)
 
-    def format_json(self, json_response):
-        """Logs a request as JSON to stderr"""
-        self.log(json.dumps(json_response, indent=2))
+    def output_json(self, json_response):
+        """Logs a request as JSON to stdout"""
+        click.echo(json.dumps(json_response, indent=2))
 
 
 pass_context = click.make_pass_decorator(Config, ensure=True)

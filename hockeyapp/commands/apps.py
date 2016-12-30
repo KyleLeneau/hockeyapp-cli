@@ -1,10 +1,8 @@
 import click
 import requests
-import json
 
 from hockeyapp.cli import pass_context
 from hockeyapp.util import *
-
 
 # URL for all the commands here
 base_url = 'https://rink.hockeyapp.net/api/2/apps'
@@ -30,7 +28,7 @@ def list(ctx):
     headers = {
         'X-HockeyAppToken': ctx.token
     }
-    ctx.format_json(requests.get(url, headers=headers).json())
+    ctx.output_json(requests.get(url, headers=headers).json())
 
 
 @cli.command(short_help='Upload an .ipa, .apk, or .zip file to create a new app.')
