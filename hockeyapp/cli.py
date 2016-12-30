@@ -18,6 +18,8 @@ class Config(object):
         self.verbose = False
         self.home = os.getcwd()
         self.token = None
+        self.username = None
+        self.password = None
 
     def log(self, msg, *args):
         """Logs a message to stderr."""
