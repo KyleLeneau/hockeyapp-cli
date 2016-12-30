@@ -11,9 +11,8 @@ base_url = 'https://rink.hockeyapp.net/api/2/apps'
 notes_type = { 'Textile': 0, 'T': 0, 'Markdown': 1, 'M': 1 }
 
 
-@click.group(short_help='This Developer API for apps lets you list all apps in your account, '
-                        'and upload, create, or delete an app. All commands require '
-                        'authentication with an API token.')
+@click.group(short_help='API for apps that lets you list all apps in your account, '
+                        'upload, create, or delete an app.')
 @token_option
 @pass_context
 def cli(ctx, token):

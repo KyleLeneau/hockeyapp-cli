@@ -20,6 +20,7 @@ class Config(object):
         self.token = None
         self.username = None
         self.password = None
+        self.app_id = None
 
     def log(self, msg, *args):
         """Logs a message to stderr."""
