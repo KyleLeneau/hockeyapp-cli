@@ -111,9 +111,16 @@ class APIRequest(object):
         self.log('Headers: %r', response.headers)
 
         if 200 <= response.status_code <= 300:
+            json = None
             if 'application/json' in response.headers['Content-Type']:
-                return response.json()
-            return response.content
+                json = response.json()
+
+            if json is not None:
+                return json
+            elif len(response.content) == 1:
+                return {'success': True}
+            else:
+                return response.content
 
         if response.status_code == 404:
             raise APIError({'404': 'URL Not Found: %s' % response.url})

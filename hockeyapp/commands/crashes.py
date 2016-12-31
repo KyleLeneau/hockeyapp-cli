@@ -5,6 +5,13 @@ from hockeyapp.util import *
 from api import *
 
 
+def query_callback(ctx, param, value):
+    if value is None or len(value) == 0:
+        raise click.BadParameter('A Query needs to be specified')
+    else:
+        return value
+
+
 @click.group(short_help='API lets you list crash groups, list crashes, download logs and description, getting a '
                         'histogram, or post custom crash reports.')
 @token_option
@@ -56,7 +63,7 @@ def groups(ctx, app, version, page, page_size, symbolicated, sort, order):
 
 @cli.command(short_help='List all crashes of a crash group.')
 @app_id_option
-@crash_group_option
+@crash_group_option()
 @page_option
 @page_size_option
 @pass_context
@@ -93,7 +100,8 @@ def crash(ctx, app, crash, form):
     ctx.output_json(response)
 
 
-@cli.command(short_help='List all crashes of a crash group.')
+@cli.command(short_help='Get a histogram of the number of crashes between two given dates for an App, '
+                        'Version or Crash Group.')
 @app_id_option
 @version_id_option(required=False)
 @crash_group_option(required=False)
@@ -114,12 +122,103 @@ def histogram(ctx, app, version, group, start, end):
     }
 
     response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
+    ctx.output_json(response['histogram'])
+
+
+@cli.command(short_help='Search for crashes by query from an App or Version.')
+@app_id_option
+@version_id_option(required=False)
+@click.option('-q', '--query',
+              type=click.STRING,
+              help='Search to use for looking for crashes.',
+              callback=query_callback)
+@pass_context
+def search(ctx, app, version, query):
+    path = '/apps/{}/crashes/search'.format(encode(app))
+    if version is not None and len(version) > 0:
+        path = '/apps/{}/app_versions/{}/crashes/search'.format(encode(app), encode(version))
+
+    data = {
+        'query': encode(query)
+    }
+
+    response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
     ctx.output_json(response)
 
 
-# Search crashes
-# Search crash groups
-# Update Group Status & Ticket
-# Custom crashes
-# anotations?
+@cli.command(short_help='Search for crashes by query from an App or Version.')
+@app_id_option
+@version_id_option(required=False)
+@click.option('-q', '--query',
+              type=click.STRING,
+              help='Search to use for looking for crash groups.',
+              callback=query_callback)
+@pass_context
+def search_groups(ctx, app, version, query):
+    path = '/apps/{}/crash_reasons/search'.format(encode(app))
+    if version is not None and len(version) > 0:
+        path = '/apps/{}/app_versions/{}/crash_reasons/search'.format(encode(app), encode(version))
 
+    data = {
+        'query': encode(query)
+    }
+
+    response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
+    ctx.output_json(response)
+
+
+@cli.command(short_help='Set the status of a crash group or assign a ticket URL.')
+@app_id_option
+@crash_group_option()
+@click.option('-s', '--status',
+              type=click.Choice(['O', 'R', 'I']),
+              help='optional, et the status of the crash group (O)pen, (R)esolved, or (I)gnored.')
+@click.option('-t', '--ticket-url',
+              type=click.STRING,
+              help='optional, set to URL for a ticket in your bug tracker.')
+@pass_context
+def update(ctx, app, group, status, ticket_url):
+    path = '/apps/{}/crash_reasons/{}'.format(encode(app), encode(group))
+    data = {}
+
+    if status is not None and len(status) > 0:
+        if status == 'O':
+            data['status'] = 0
+        elif status == 'R':
+            data['status'] = 1
+        elif status == 'I':
+            data['status'] = 2
+
+    if ticket_url is not None and len(ticket_url) > 0:
+        data['ticket_url'] = ticket_url
+
+    response = APIRequest(ctx.token, log=ctx.vlog).post(path, data=data)
+    ctx.output_json(response)
+
+
+@cli.command(short_help='Set the status of a crash group or assign a ticket URL.')
+@app_id_option
+@crash_group_option()
+@click.option('-t', '--text',
+              type=click.STRING,
+              help='optional, the new annotation text.')
+@click.option('-c', '--clear',
+              help='Clear the annotation text.',
+              is_flag=True)
+@pass_context
+def annotate(ctx, app, group, text, clear):
+    path = '/apps/{}/crash_reasons/{}/crash_annotations'.format(encode(app), encode(group))
+
+    if clear:
+        response = APIRequest(ctx.token, log=ctx.vlog).delete(path)
+        ctx.output_json(response)
+    elif text is not None and len(text) > 0:
+        data = {'text': text}
+        response = APIRequest(ctx.token, log=ctx.vlog).post(path, data=data)
+        ctx.output_json(response)
+    else:
+        response = APIRequest(ctx.token, log=ctx.vlog).get(path)
+        ctx.output_json(response)
+
+
+# TODO: Add Custom crashes CLI command

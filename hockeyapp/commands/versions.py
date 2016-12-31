@@ -52,7 +52,7 @@ def statistics(ctx, recent):
 
 
 @cli.command(short_help='Get App Source Information about a specific version.')
-@version_id_option
+@version_id_option()
 @pass_context
 def sources(ctx, version):
     path = '/apps/{}/app_versions/{}/app_sources'.format(encode(ctx.app_id), encode(version))
