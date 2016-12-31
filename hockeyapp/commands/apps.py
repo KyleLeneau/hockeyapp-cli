@@ -1,5 +1,4 @@
 import click
-import requests
 
 from hockeyapp.cli import pass_context
 from hockeyapp.util import *
