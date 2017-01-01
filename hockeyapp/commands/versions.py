@@ -8,7 +8,7 @@ from api import *
 @click.group(short_help='API for versions that lets you list versions of an app, upload, create, or update a '
                         'version, or delete a single or delete multiple versions.')
 @token_option
-@app_id_option
+@app_id_option()
 @pass_context
 def cli(ctx, token, app):
     ctx.token = token

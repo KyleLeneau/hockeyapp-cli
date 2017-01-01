@@ -21,7 +21,7 @@ def cli(ctx, token):
 
 
 @cli.command(short_help='List all crash groups for an app or version.')
-@app_id_option
+@app_id_option()
 @version_id_option(required=False)
 @page_option
 @page_size_option
@@ -62,7 +62,7 @@ def groups(ctx, app, version, page, page_size, symbolicated, sort, order):
 
 
 @cli.command(short_help='List all crashes of a crash group.')
-@app_id_option
+@app_id_option()
 @crash_group_option()
 @page_option
 @page_size_option
@@ -82,7 +82,7 @@ def reasons(ctx, app, group, page, page_size):
 
 
 @cli.command(short_help='Query a single crash log, its meta data, or the description.')
-@app_id_option
+@app_id_option()
 @crash_id_option
 @click.option('-f', '--form',
               help="required, set to \"log\" for the crash log, to \"json\" for the meta data, and to \"text\" for "
@@ -102,7 +102,7 @@ def crash(ctx, app, crash, form):
 
 @cli.command(short_help='Get a histogram of the number of crashes between two given dates for an App, '
                         'Version or Crash Group.')
-@app_id_option
+@app_id_option()
 @version_id_option(required=False)
 @crash_group_option(required=False)
 @date_option('-s', '--start')
@@ -126,7 +126,7 @@ def histogram(ctx, app, version, group, start, end):
 
 
 @cli.command(short_help='Search for crashes by query from an App or Version.')
-@app_id_option
+@app_id_option()
 @version_id_option(required=False)
 @click.option('-q', '--query',
               type=click.STRING,
@@ -147,7 +147,7 @@ def search(ctx, app, version, query):
 
 
 @cli.command(short_help='Search for crashes by query from an App or Version.')
-@app_id_option
+@app_id_option()
 @version_id_option(required=False)
 @click.option('-q', '--query',
               type=click.STRING,
@@ -168,7 +168,7 @@ def search_groups(ctx, app, version, query):
 
 
 @cli.command(short_help='Set the status of a crash group or assign a ticket URL.')
-@app_id_option
+@app_id_option()
 @crash_group_option()
 @click.option('-s', '--status',
               type=click.Choice(['O', 'R', 'I']),
@@ -197,7 +197,7 @@ def update(ctx, app, group, status, ticket_url):
 
 
 @cli.command(short_help='Set the status of a crash group or assign a ticket URL.')
-@app_id_option
+@app_id_option()
 @crash_group_option()
 @click.option('-t', '--text',
               type=click.STRING,

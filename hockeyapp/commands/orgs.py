@@ -5,19 +5,11 @@ from hockeyapp.util import *
 from api import *
 
 
-def org_id_option(func):
-    """Get a decorator for Organization ID input"""
-
-    def callback(ctx, param, value):
-        if value is None or len(value) == 0:
-            raise click.BadParameter('An Organization Id needs to be specified')
-        else:
-            return value
-
-    return click.option('-o', '--org',
-                        type=click.STRING,
-                        help='Specify the Organization Id.',
-                        callback=callback)(func)
+def org_id_callback(ctx, param, value):
+    if value is None or len(value) == 0:
+        raise click.BadParameter('An Organization Id needs to be specified')
+    else:
+        return value
 
 
 @click.group(short_help='Lets you query the organizations for an account.')
@@ -35,7 +27,10 @@ def list(ctx):
 
 
 @cli.command(short_help='Upload an .ipa, .apk, or .zip file to create a new app.')
-@org_id_option
+@click.option('-o', '--org',
+              type=click.STRING,
+              help='Specify the Organization Id.',
+              callback=org_id_callback)
 @pass_context
 def teams(ctx, org):
     path = '/organizations/{}/teams'.format(encode(org))

@@ -7,6 +7,10 @@ def encode(s):
     return urllib.quote(s)
 
 
+def string_has_value(value):
+    return value is not None and len(value) > 0
+
+
 def token_option(func):
     """Get a decorator for easy HockeyApp token input"""
 
@@ -23,19 +27,22 @@ def token_option(func):
                         callback=callback)(func)
 
 
-def app_id_option(func):
+def app_id_option(required=True):
     """Get a decorator for App ID input"""
 
-    def callback(ctx, param, value):
-        if value is None or len(value) == 0:
-            raise click.BadParameter('An App Id needs to be specified')
-        else:
-            return value
+    def decorator(f):
+        def callback(ctx, param, value):
+            if required and (value is None or len(value) == 0):
+                raise click.BadParameter('An App Id needs to be specified')
+            else:
+                return value
 
-    return click.option('-a', '--app',
-                        type=click.STRING,
-                        help='Specify the HockeyApp App Id.',
-                        callback=callback)(func)
+        return click.option('-a', '--app',
+                            type=click.STRING,
+                            help='Specify the HockeyApp App Id.',
+                            callback=callback)(f)
+
+    return decorator
 
 
 def version_id_option(required=True):
