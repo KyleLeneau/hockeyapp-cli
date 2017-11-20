@@ -4,7 +4,6 @@ Extended by all API classes for communicating with the hockeyapp API
 import re
 import requests
 
-
 class APIError(Exception):
     """Raised when the Hockeyapp API returns an error for a request"""
 
@@ -22,7 +21,6 @@ class APIError(Exception):
         return ', '.join(sorted(['[%s]: %s' %
                                  (key, self.args[0][key])
                                  for key in self.args[0]]))
-
 
 class APIRequest(object):
     """Base class for all API requests. Set Class.PATH to the part of the path

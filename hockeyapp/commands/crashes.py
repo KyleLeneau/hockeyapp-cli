@@ -4,13 +4,11 @@ from hockeyapp.cli import pass_context
 from hockeyapp.util import *
 from api import *
 
-
 def query_callback(ctx, param, value):
     if value is None or len(value) == 0:
         raise click.BadParameter('A Query needs to be specified')
     else:
         return value
-
 
 @click.group(short_help='API lets you list crash groups, list crashes, download logs and description, getting a '
                         'histogram, or post custom crash reports.')
@@ -18,7 +16,6 @@ def query_callback(ctx, param, value):
 @pass_context
 def cli(ctx, token):
     ctx.token = token
-
 
 @cli.command(short_help='List all crash groups for an app or version.')
 @app_id_option()
@@ -60,7 +57,6 @@ def groups(ctx, app, version, page, page_size, symbolicated, sort, order):
     response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
     ctx.output_json(response)
 
-
 @cli.command(short_help='List all crashes of a crash group.')
 @app_id_option()
 @crash_group_option()
@@ -80,7 +76,6 @@ def reasons(ctx, app, group, page, page_size):
     response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
     ctx.output_json(response)
 
-
 @cli.command(short_help='Query a single crash log, its meta data, or the description.')
 @app_id_option()
 @crash_id_option
@@ -98,7 +93,6 @@ def crash(ctx, app, crash, form):
 
     response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
     ctx.output_json(response)
-
 
 @cli.command(short_help='Get a histogram of the number of crashes between two given dates for an App, '
                         'Version or Crash Group.')
@@ -124,7 +118,6 @@ def histogram(ctx, app, version, group, start, end):
     response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
     ctx.output_json(response['histogram'])
 
-
 @cli.command(short_help='Search for crashes by query from an App or Version.')
 @app_id_option()
 @version_id_option(required=False)
@@ -145,7 +138,6 @@ def search(ctx, app, version, query):
     response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
     ctx.output_json(response)
 
-
 @cli.command(short_help='Search for crashes by query from an App or Version.')
 @app_id_option()
 @version_id_option(required=False)
@@ -165,7 +157,6 @@ def search_groups(ctx, app, version, query):
 
     response = APIRequest(ctx.token, log=ctx.vlog).get(path, data=data)
     ctx.output_json(response)
-
 
 @cli.command(short_help='Set the status of a crash group or assign a ticket URL.')
 @app_id_option()
@@ -194,7 +185,6 @@ def update(ctx, app, group, status, ticket_url):
 
     response = APIRequest(ctx.token, log=ctx.vlog).post(path, data=data)
     ctx.output_json(response)
-
 
 @cli.command(short_help='Set the status of a crash group or assign a ticket URL.')
 @app_id_option()

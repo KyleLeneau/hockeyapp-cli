@@ -7,7 +7,7 @@ making HTTP requests to the [HockeyApp API](https://support.hockeyapp.net/kb/api
 ## Quickstart
 
 ```
-git clone https://github.com/emaadmanzoor/igor-cli
+git clone https://github.com/KyleLeNeau/hockeyapp-cli
 cd hockeyapp-cli
 virtualenv env
 source env/bin/activate
